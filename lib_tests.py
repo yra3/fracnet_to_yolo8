@@ -178,7 +178,8 @@ def visualize_segmentation(image_path, label_path):
         (0, 255, 0),    # Зеленый для displaced
         (255, 0, 0),    # Синий для non-displaced
         (0, 0, 255),    # Красный для buckle
-        (255, 255, 0)   # Желтый для segmental
+        (255, 255, 0),   # Желтый для segmental
+        (255, 0, 255)   # какой-то для not-recognized
     ]
     
     for line in lines:
@@ -220,7 +221,7 @@ def visualize_segmentation(image_path, label_path):
             vis_image = cv2.addWeighted(vis_image, 1, mask, alpha, 0)
             
             # Добавляем метку класса
-            class_names = ['displaced', 'non-displaced', 'buckle', 'segmental']
+            class_names = ['displaced', 'non-displaced', 'buckle', 'segmental', 'not-recognized']
             label = class_names[class_id]
             cv2.putText(vis_image, label, (x1, y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, colors[class_id], 2)
     
@@ -360,7 +361,6 @@ def main():
     
     # Имена классов (типы переломов)
     class_names = ['displaced', 'non-displaced', 'buckle', 'segmental', 'not-recognized']
-    
     # Обработка датасета
     process_dataset(images_dir, labels_dir, info_csv, output_dir)
     
@@ -368,6 +368,8 @@ def main():
     create_yaml_config(output_dir, class_names)
     
     print("Обработка датасета завершена!")
+
+    check_annotations(output_dir)
 
 if __name__ == "__main__":
     main()
